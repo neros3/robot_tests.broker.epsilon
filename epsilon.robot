@@ -20,8 +20,8 @@ ${locator.tenderPeriod.endDate}    css = div.table > tr : nth-child(23) > td
 ${locator.tenderId}    css = div.table > tr : nth-child(6) > td
 ${locator.procuringEntity.name}    css = div.table > tr : nth-child(10) > td
 ${locator.dgf}    номер фгв
-${locator.dgfDecisionID}    id=tePosition_dgfDecisionID
-${locator.dgfDecisionDate}    id=tdtpPosition_dgfDecisionDate
+${locator.dgfDecisionID}    id=ід рішення виконавчої ради
+${locator.dgfDecisionDate}    id=від
 ${locator.eligibilityCriteria}    id=критерії оцінки
 ${locator.tenderAttempts}    id=tPosition_tenderAttempts
 ${locator.procurementMethodType}    id=tPosition_procurementMethodType
@@ -66,7 +66,6 @@ ${locator.contracts.status}    css=.contract_status
 *** Keywords ***
 Підготувати клієнт для користувача
     [Arguments]    @{ARGUMENTS}
-    [Documentation]    Відкрити брaвзер, створити обєкт api wrapper, тощо
     Open Browser    ${USERS.users['${ARGUMENTS[0]}'].homepage}    ${USERS.users['${ARGUMENTS[0]}'].browser}    alias=${ARGUMENTS[0]}
     Set Window Size    @{USERS.users['${ARGUMENTS[0]}'].size}
     Set Window Position    @{USERS.users['${ARGUMENTS[0]}'].position}
@@ -78,7 +77,6 @@ ${locator.contracts.status}    css=.contract_status
 
 Підготувати дані для оголошення тендера користувачем
     [Arguments]    ${username}    ${tender_data}    ${role_name}
-    [Documentation]    Відключити створення тендеру в тестовому режимі
     ${tender_data}=    adapt_test_mode    ${tender_data}
     [Return]    ${tender_data}
 
@@ -102,6 +100,7 @@ Login
     [Arguments]    @{ARGUMENTS}
     [Documentation]    ${ARGUMENTS[0]} == username
     ...    ${ARGUMENTS[1]} == tender_data
+    ...    ${ARGUMENTS[2]} == ${filepath}
     Set Global Variable    ${TENDER_INIT_DATA_LIST}    ${ARGUMENTS[1]}
     ${title}=    Get From Dictionary    ${ARGUMENTS[1].data}    title
     ${dgf}=    Get From Dictionary    ${ARGUMENTS[1].data}    dgfID
@@ -142,11 +141,13 @@ Login
     Додати предмет    ${items[${index}]}    ${index}
     Click Element    id=submit-auction-btn
     Sleep    3
+    Select From List By Value    id = files-type    1
+    Choose File    css = div.file-caption-name    ${ARGUMENTS[2]}
     Wait Until Page Contains Element    id = publish-btn    20
     Click Element    id = publish-btn
     Wait Until Page Contains    Аукціон створено    10
-    ${tender_id}=    Get Text    id=tPosition_tenderID
-    ${TENDER}=    Get Text    id=tPosition_tenderID
+    ${tender_id}=    Get Text    id = auction-id
+    ${TENDER}=    Get Text    id= auction-id
     log to console    ${TENDER}
     [Return]    ${TENDER}
 
@@ -169,7 +170,7 @@ Login
     epsilon.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[2]}
     Wait Until Page Contains Element    id = update-btn
     Click Element    id=update-btn
-    Select From List By Value    id = files-type    Договір про нерозголошення
+    Select From List By Value    id = files-type    8
     Choose File    css = div.file-caption-name    ${ARGUMENTS[1]}
     Sleep    2
     Click Element    id=upload_button
@@ -184,20 +185,23 @@ Login
     Wait Until Page Contains Element    name = Auctions[tenderID]
     Input Text    name = Auctions[tenderID]    ${ARGUMENTS[1]}
     Sleep    2
-    Wait Until Page Contains Element    id=
-    Click Element    id=
+    Wait Until Page Contains Element    id=view-btn
+    Click Element    id=view-btn
     sleep    2
 
 Перейти до сторінки запитань
-    Click Element    id =
-    Wait Until Page Contains Element    id=
-    Click Element    id=
+    [Documentation]    ${ARGUMENTS[0]} = username
+    ...    ${ARGUMENTS[1]} = tenderUaId
+    epsilon.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
+    Click Element    id = question-btn
+    Wait Until Page Contains Element    id= create-question-btn
+    Click Element    id = create-question-btn
     Wait Until Page Contains Element    id=questions-title
 
 Перейти до сторінки відмін
-    Wait Until Page Contains Element    id=cancels_ref
-    Click Element    id=cancels_ref
-    Wait Until Element Contains    id=records_shown    Y
+    Wait Until Page Contains Element    id=decline-btn
+    Click Element    id=decline-btn
+    Wait Until Page Contains Element    id=decline-id
 
 Задати питання
     [Arguments]    @{ARGUMENTS}
@@ -206,48 +210,25 @@ Login
     ...    ${ARGUMENTS[2]} == questionId
     ${title}=    Get From Dictionary    ${ARGUMENTS[2].data}    title
     ${description}=    Get From Dictionary    ${ARGUMENTS[2].data}    description
-    Wait Until Page Contains Element    id=
-    Click Element    id=
+    Wait Until Page Contains Element    id= create-question-btn
+    Click Element    id=create-question-btn
     Sleep    3
     Input text    id=questions-title    ${title}
     Input text    id=questions-description    ${description}
-    Click Element    id=
+    Click Element    id= create-question-btn
     Sleep    3
-
-Скасувати закупівлю
-    [Arguments]    @{ARGUMENTS}
-    [Documentation]    ${ARGUMENTS[0]} = username
-    ...    ${ARGUMENTS[1]} = tenderUaId
-    ...    ${ARGUMENTS[2]} = cancellation_reason
-    ...    ${ARGUMENTS[3]} = doc_path
-    ...    ${ARGUMENTS[4]} = description
-    epsilon.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
-    Wait Until Page Contains Element    xpath=(//*[@id='btnСancel' and not(contains(@style,'display: none'))])
-    Click Element    id=btnСancel
-    Sleep    2
-    Input text    id=e_reason    ${ARGUMENTS[2]}
-    Click Element    id=SendCancellation
-    Sleep    3
-    Wait Until Page Contains Element    xpath=(//*[@id='pnList']//span[contains(@class, 'add_document')])
-    Click Element    xpath=(//*[@id='pnList']//span[contains(@class, 'add_document')])
-    Choose File    xpath=(//*[@id='upload_form']/input[2])    ${ARGUMENTS[3]}
-    Sleep    2
-    Input text    id=eFile_accessDetails    ${ARGUMENTS[4]}
-    Click Element    id=upload_button
-    Sleep    2
-    Reload Page
-    Click Element    xpath=(//*[@id='pnList']/div[1]/div[2]/div[2]/span)
 
 Отримати інформацію про cancellations[0].status
     Перейти до сторінки відмін
-    Wait Until Page Contains Element    xpath=(//span[contains(@class, 'rec_cancel_status')])
-    ${return_value}=    Get text    xpath=(//span[contains(@class, 'rec_cancel_status')])
+    Wait Until Page Contains Element    css=#wl > tbody > tr:nth-child(5) > td
+    ${return_value}=    Get text    css=#wl > tbody > tr:nth-child(5) > td
     [Return]    ${return_value}
 
 Отримати інформацію про cancellations[0].reason
     Перейти до сторінки відмін
-    Wait Until Page Contains Element    xpath=(//span[contains(@class, 'rec_cancel_reason')])
-    ${return_value}=    Get text    xpath=(//span[contains(@class, 'rec_cancel_reason')])
+    Wait Until Page Contains Element    id = modal-btn
+    Click Element    id = modal-btn
+    ${return_value}=    Get text    id = messages-notes
     [Return]    ${return_value}
 
 Оновити сторінку з тендером
@@ -270,7 +251,7 @@ Login
     [Arguments]    @{ARGUMENTS}
     [Documentation]    ${ARGUMENTS[0]} == username
     ...    ${ARGUMENTS[2]} == fieldname
-    ${return_value}=    run keyword    Отримати інформацію про ${ARGUMENTS[2]}
+    ${return_value}=    Ryn Keyword    Отримати інформацію про ${ARGUMENTS[2]}
     [Return]    ${return_value}
 
 Отримати текст із поля і показати на сторінці
@@ -334,8 +315,8 @@ Login
     ...    ${ARGUMENTS[1]} = ${TENDER_UAID}
     ...    ${ARGUMENTS[2]} == fieldname
     ...    ${ARGUMENTS[3]} == fieldvalue
-    Wait Until Page Contains Element    id =     5
-    Click Element    id =
+    epsilon.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
+    Click Element    id = update-btn
     Input Text    ${locator.edit.${ARGUMENTS[2]}}    ${ARGUMENTS[3]}
     Click Element    id=submit-auction-btn
     Wait Until Page Contains    Успішно оновлено    5
@@ -495,23 +476,19 @@ Login
     [Documentation]    ${ARGUMENTS[0]} == username
     ...    ${ARGUMENTS[1]} == tenderId
     ...    ${ARGUMENTS[2]} == ${test_bid_data}
+    ...    ${ARGUMENTS[3]} == ${filepath}
     ${amount}=    get_str    ${ARGUMENTS[2].data.value.amount}
-    ${is_qualified}=    is_qualified    ${ARGUMENTS[2]}
-    ${is_eligible}=    is_eligible    ${ARGUMENTS[2]}
     epsilon.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
-    Wait Until Page Contains Element    xpath=(//*[@id='btnBid' and not(contains(@style,'display: none'))])
-    Click Element    id=btnBid
-    Sleep    3
-    Wait Until Page Contains Element    xpath=(//*[@id='eBid_price' and not(contains(@style,'display: none'))])
-    Input Text    id=eBid_price    ${amount}
-    Run Keyword If    ${is_qualified}    Click Element    id=lcbBid_selfQualified
-    Run Keyword If    ${is_eligible}    Click Element    id=lcbBid_selfEligible
-    Click Element    id=btn_save
+    Wait Until Page Contains Element    id = view-btn
+    Click Element    id= view-btn
+    sleep    3s
+    Click Element    id = create-bid-btn
+    sleep     5s
+    Input Text    id=bids-value_amount    ${amount}
+    Choose File    css = div.file-caption-name    ${ARGUMENTS[3]}
+    Click Element    id=
     sleep    3
-    Wait Until Page Contains Element    xpath=(//*[@id='btn_public' and not(contains(@style,'display: none'))])
-    Click Element    id=btn_public
-    sleep    1
-    ${resp}=    Get Value    id=eBid_price
+    ${resp}=    Get Value    id=bids-value_amount
     [Return]    ${resp}
 
 Скасувати цінову пропозицію
@@ -528,10 +505,12 @@ Login
 Отримати інформацію із пропозиції
     [Arguments]    ${username}    ${tender_uaid}    ${field}
     epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
-    Wait Until Page Contains Element    xpath=(//*[@id='btnShowBid' and not(contains(@style,'display: none'))])
-    Click Element    id=btnShowBid
-    Sleep    3
-    ${value}=    Get Value    id=eBid_price
+    sleep    3s
+    Click Element    id= view-btn
+    Sleep    3s
+    Click Element    id = create-bid-btn
+    Sleep    3s
+    ${value}=    Get Value    id=bids-value_amount
     ${value}=    Convert To Number    ${value}
     [Return]    ${value}
 
@@ -539,58 +518,35 @@ Login
     [Arguments]    @{ARGUMENTS}
     [Documentation]    ${ARGUMENTS[0]} == username
     ...    ${ARGUMENTS[1]} == tenderId
-    ...    ${ARGUMENTS[2]} == amount
-    ...    ${ARGUMENTS[3]} == amount.value
-    ${amount}=    get_str    ${${ARGUMENTS[3]}}
+    ...    ${ARGUMENTS[2]} == ${test_bid_data}
+    ...    ${ARGUMENTS[3]} == ${filepath}
+    ${amount}=    get_str    ${ARGUMENTS[2].data.value.amount}
     epsilon.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
-    Wait Until Page Contains Element    xpath=(//*[@id='btnShowBid' and not(contains(@style,'display: none'))])
-    Click Element    id=btnShowBid
-    Sleep    3
-    Wait Until Page Contains Element    xpath=(//*[@id='eBid_price' and not(contains(@style,'display: none'))])
-    Input Text    id=eBid_price    ${amount}
-    sleep    1
-    Click Element    id=btn_public
-
-Завантажити документ в ставку
-    [Arguments]    @{ARGUMENTS}
-    [Documentation]    ${ARGUMENTS[1]} == file
-    ...    ${ARGUMENTS[2]} == tenderId
-    Wait Until Page Contains Element    xpath=(//*[@id='btnShowBid' and not(contains(@style,'display: none'))])
-    Click Element    id=btnShowBid
-    Sleep    3
-    Wait Until Page Contains Element    xpath=(//*[@id='btn_documents_add' and not(contains(@style,'display: none'))])
-    Click Element    id=btn_documents_add
-    Choose File    xpath=(//*[@id='upload_form']/input[2])    ${ARGUMENTS[1]}
-    Sleep    2
-    Click Element    id=upload_button
-    Reload Page
-
-Змінити документ в ставці
-    [Arguments]    @{ARGUMENTS}
-    [Documentation]    ${ARGUMENTS[0]} == username
-    ...    ${ARGUMENTS[1]} == file
-    ...    ${ARGUMENTS[2]} == bidId
-    Reload Page
-    Wait Until Page Contains Element    xpath=(//*[@id='btn_documents_add' and not(contains(@style,'display: none'))])
-    Click Element    css=.bt_ReUpload:first-child
-    Choose File    xpath=(//*[@id='upload_form']/input[2])    ${ARGUMENTS[1]}
-    Sleep    2
-    Click Element    id=upload_button
-    Reload Page
+    Wait Until Page Contains Element    id= view-btn
+    Click Element    id= view-btn
+    sleep    3s
+    Click Element    id = create-bid-btn
+    sleep     5s
+    Input Text    id=bids-value_amount    ${amount}
+    Choose File    css = div.file-caption-name    ${ARGUMENTS[3]}
+    Click Element    id= create-bid-btn
 
 Завантажити фінансову ліцензію
     [Arguments]    ${username}    ${tender_uaid}    ${filepath}
-    epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
-    Wait Until Page Contains Element    xpath=(//*[@id='btnShowBid' and not(contains(@style,'display: none'))])
-    Click Element    id=btnShowBid
-    Sleep    3
-    Wait Until Page Contains Element    xpath=(//*[@id='btn_documents_add' and not(contains(@style,'display: none'))])
-    Click Element    id=btn_documents_add
-    Select From List By Value    id=slFile_documentType    financialLicense
-    Choose File    xpath=(//*[@id='upload_form']/input[2])    ${filepath}
-    Sleep    2
-    Click Element    id=upload_button
-    Reload Page
+    [Documentation]    ${ARGUMENTS[0]} == username
+    ...    ${ARGUMENTS[1]} == tenderId
+    ...    ${ARGUMENTS[2]} == ${test_bid_data}
+    ...    ${ARGUMENTS[3]} == ${filepath}
+    ${amount}=    get_str    ${ARGUMENTS[2].data.value.amount}
+    epsilon.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
+    Wait Until Page Contains Element    id = view-btn
+    Click Element    id= view-btn
+    sleep    3s
+    Click Element    id = create-bid-btn
+    sleep     5s
+    Input Text    id=bids-value_amount    ${amount}
+    Choose File    css = div.file-caption-name    ${ARGUMENTS[3]}
+    Click Element    id = create-bid-btn
 
 Отримати інформацію про bids
     [Arguments]    @{ARGUMENTS}
@@ -616,60 +572,67 @@ Login
 Завантажити документ в тендер з типом
     [Arguments]    ${username}    ${tender_uaid}    ${filepath}    ${doc_type}
     epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
-    Wait Until Page Contains Element    xpath=(//*[@id='btn_documents_add' and not(contains(@style,'display: none'))])
-    Click Element    id=btn_documents_add
-    Select From List By Value    id=slFile_documentType    ${doc_type}
-    Choose File    xpath=(//*[@id='upload_form']/input[2])    ${filepath}
+    Wait Until Page Contains Element    id = update-btn
+    Click Element    id=update-btn
+    Select From List By Value    id = files-type    ${doc_type}
+    Choose File    css = div.file-caption-name    ${filepath}
     Sleep    2
     Click Element    id=upload_button
 
 Завантажити ілюстрацію
     [Arguments]    ${username}    ${tender_uaid}    ${filepath}
-    epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
-    Wait Until Page Contains Element    xpath=(//*[@id='btn_documents_add' and not(contains(@style,'display: none'))])
-    Click Element    id=btn_documents_add
-    Select From List By Value    id=slFile_documentType    6
-    Choose File    xpath=(//*[@id='upload_form']/input[2])    ${filepath}
+    [Documentation]    ${ARGUMENTS[0]} == username
+    ...    ${ARGUMENTS[1]} == tenderId
+    ...    ${ARGUMENTS[2]} == ${test_bid_data}
+    ...    ${ARGUMENTS[3]} == ${filepath}
+    epsilon.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[2]}
+    Wait Until Page Contains Element    id = update-btn
+    Click Element    id=update-btn
+    Select From List By Value    id = files-type    6
+    Choose File    css = div.file-caption-name    ${ARGUMENTS[1]}
     Sleep    2
     Click Element    id=upload_button
+    Reload Page
 
 Додати Virtual Data Room
     [Arguments]    ${username}    ${tender_uaid}    ${vdr_url}
-    epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
-    Wait Until Page Contains Element    xpath=(//*[@id='btn_documents_add' and not(contains(@style,'display: none'))])
-    Click Element    id=btn_documents_add
-    Select From List By Value    id=slFile_documentType    virtualDataRoom
-    Input text    id=eFile_url    ${vdr_url}
+    [Documentation]    ${ARGUMENTS[0]} == username
+    ...    ${ARGUMENTS[1]} == tenderId
+    ...    ${ARGUMENTS[2]} == ${test_bid_data}
+    ...    ${ARGUMENTS[3]} == ${filepath}
+    epsilon.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[2]}
+    Wait Until Page Contains Element    id = update-btn
+    Click Element    id=update-btn
+    Select From List By Value    id = files-type    10
+    Choose File    css = div.file-caption-name    ${ARGUMENTS[1]}
+    Sleep    2
     Click Element    id=upload_button
+    Reload Page
 
 Додати публічний паспорт активу
     [Arguments]    ${username}    ${tender_uaid}    ${vdr_url}
-    epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
-    Wait Until Page Contains Element    xpath=(//*[@id='btn_documents_add' and not(contains(@style,'display: none'))])
-    Click Element    id=btn_documents_add
-    Select From List By Value    id=slFile_documentType    x_dgfPublicAssetCertificate
-    Input text    id=eFile_url    ${vdr_url}
+    [Documentation]    ${ARGUMENTS[0]} == username
+    ...    ${ARGUMENTS[1]} == tenderId
+    ...    ${ARGUMENTS[2]} == ${test_bid_data}
+    ...    ${ARGUMENTS[3]} == ${filepath}
+    epsilon.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[2]}
+    Wait Until Page Contains Element    id = update-btn
+    Click Element    id=update-btn
+    Select From List By Value    id = files-type    2
+    Choose File    css = div.file-caption-name    ${ARGUMENTS[1]}
+    Sleep    2
     Click Element    id=upload_button
-
-Додати офлайн документ
-    [Arguments]    ${username}    ${tender_uaid}    ${accessDetails}
-    epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
-    Wait Until Page Contains Element    xpath=(//*[@id='btn_documents_add' and not(contains(@style,'display: none'))])
-    Click Element    id=btn_documents_add
-    Select From List By Value    id=slFile_documentType    x_dgfAssetFamiliarization
-    Input text    id=eFile_accessDetails    ${accessDetails}
-    Click Element    id=upload_button
+    Reload Page
 
 Отримати інформацію із документа по індексу
     [Arguments]    ${username}    ${tender_uaid}    ${document_index}    ${field}
     epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
-    ${doc_value}=    Get Text    xpath=(//*[@id='pn_documentsContent_']/table[${document_index + 1}]//span[contains(@class, 'documentType')])
+    ${doc_value}=    Get Text    id = doc_id
     [Return]    ${doc_value}
 
 Отримати інформацію із документа
     [Arguments]    ${username}    ${tender_uaid}    ${doc_id}    ${field_name}
-    ${doc_value}=    Run Keyword If    '${field_name}' == 'description'    Get Text    xpath=(//span[contains(@class, 'description') and contains(@class, '${doc_id}')])
-    ...    ELSE    Get Text    xpath=(//a[contains(@class, 'doc_title') and contains(@class, '${doc_id}')])
+    ${doc_value}=    Get Text    id = doc_id
     [Return]    ${doc_value}
 
 Відповісти на запитання
@@ -681,13 +644,6 @@ Login
     Input Text    id=e_answer    ${answer_data.data.answer}
     Click Element    id=SendAnswer
     sleep    1
-
-Отримати кількість предметів в тендері
-    [Arguments]    ${username}    ${tender_uaid}
-    epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
-    ${return_value}=    Get Text    id=tPosition_items_count
-    ${return_value}=    Convert To Number    ${return_value}
-    [Return]    ${return_value}
 
 Отримати інформацію із запитання
     [Arguments]    ${username}    ${tender_uaid}    ${question_id}    ${field_name}
@@ -702,17 +658,6 @@ Login
     [Arguments]    ${username}    ${tender_uaid}    ${question}
     epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
     Задати питання    ${username}    ${tender_uaid}    ${question}
-
-Задати запитання на предмет
-    [Arguments]    ${username}    ${tender_uaid}    ${item_id}    ${question}
-    epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
-    Wait Until Page Contains Element    xpath=(//*[@id='tPosition_status' and not(contains(@style,'display: none'))])
-    Click Element    xpath=(//span[contains(@class, 'bt_item_question') and contains(@class, '${item_id}')])
-    Sleep    3
-    Input text    id=e_title    ${question.data.title}
-    Input text    id=e_description    ${question.data.description}
-    Click Element    id=SendQuestion
-    Sleep    3
 
 Додати предмет закупівлі
     [Arguments]    ${username}    ${tender_uaid}    ${item}
@@ -735,7 +680,7 @@ Login
 Отримати кількість документів в тендері
     [Arguments]    ${username}    ${tender_uaid}
     epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
-    ${tender_doc_number}=    Get Matching Xpath Count    xpath=(//*[@id='pn_documentsContent_']/table)
+    ${tender_doc_number}=    Get Matching Xpath Count    xpath=(//*[@id=' doc_id']/)
     [Return]    ${tender_doc_number}
 
 Отримати документ
@@ -766,13 +711,6 @@ Login
     Wait Until Page Contains Element    xpath=(//*[@id='pnAwardList']/div[last()]//*[contains(@class, 'Cancel_button')])
     Sleep    1
     Click Element    xpath=(//*[@id='pnAwardList']/div[last()]//*[contains(@class, 'Cancel_button')])
-
-Підтвердити постачальника
-    [Arguments]    ${username}    ${tender_uaid}    ${award_num}
-    epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
-    Wait Until Page Contains Element    xpath=(//*[@id='pnAwardList']/div[last()]//*[contains(@class, 'award_button')])
-    Sleep    1
-    Click Element    xpath=(//*[@id='pnAwardList']/div[last()]//*[contains(@class, 'award_button')])
 
 Дискваліфікувати постачальника
     [Arguments]    ${username}    ${tender_uaid}    ${award_num}    ${description}
