@@ -2,7 +2,7 @@
 Library           String
 Library           Selenium2Library
 Library           Collections
-Library           uisce_service.py
+Library           epsilon_service.py
 
 *** Variables ***
 ${locator.edit.description}    id = auction-description
@@ -67,7 +67,7 @@ ${locator.contracts.status}    css=.contract_status
     Open Browser    ${USERS.users['${ARGUMENTS[0]}'].homepage}    ${USERS.users['${ARGUMENTS[0]}'].browser}    alias=${ARGUMENTS[0]}
     Set Window Size    @{USERS.users['${ARGUMENTS[0]}'].size}
     Set Window Position    @{USERS.users['${ARGUMENTS[0]}'].position}
-    Run Keyword If    '${ARGUMENTS[0]}' != 'uisce_Viewer'    Login    ${ARGUMENTS[0]}
+    Run Keyword If    '${ARGUMENTS[0]}' != 'epsilon_Viewer'    Login    ${ARGUMENTS[0]}
 
 Підготувати дані для оголошення тендера
     [Arguments]    ${username}    ${tender_data}    ${role_name}
@@ -178,7 +178,7 @@ Login
     [Documentation]    ${ARGUMENTS[0]} == username
     ...    ${ARGUMENTS[1]} == ${filepath}
     ...    ${ARGUMENTS[2]} == ${TENDER}
-    uisce.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[2]}
+    epsilon.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[2]}
     Wait Until Page Contains Element    id = update-btn
     Click Element    id=update-btn
     Select From List By Value    id = files-type    8
@@ -203,7 +203,7 @@ Login
 Перейти до сторінки запитань
     [Documentation]    ${ARGUMENTS[0]} = username
     ...    ${ARGUMENTS[1]} = tenderUaId
-    uisce.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
+    epsilon.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
     Click Element    id = auction-view-btn
     Click Element    id = tab-2
     Wait Until Page Contains Element    id= create-question-btn
@@ -249,7 +249,7 @@ Login
     [Documentation]    ${ARGUMENTS[0]} = username
     ...    ${ARGUMENTS[1]} = ${TENDER_UAID}
     Switch Browser    ${ARGUMENTS[0]}
-    uisce.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
+    epsilon.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
 
 Отримати інформацію із предмету
     [Arguments]    @{ARGUMENTS}
@@ -257,7 +257,7 @@ Login
     ...    ${ARGUMENTS[1]} == tender_uaid
     ...    ${ARGUMENTS[2]} == item_id
     ...    ${ARGUMENTS[3]} == field_name
-    ${return_value}=    Run Keyword And Return    uisce.Отримати інформацію із тендера    ${username}    ${tender_uaid}    ${field_name}
+    ${return_value}=    Run Keyword And Return    epsilon.Отримати інформацію із тендера    ${username}    ${tender_uaid}    ${field_name}
     [Return]    ${return_value}
 
 Отримати інформацію із тендера
@@ -290,7 +290,7 @@ Login
 
 Отримати інформацію про dgfDecisionDate
     ${date_value}=    Отримати текст із поля і показати на сторінці    dgfDecisionDate
-    ${return_value}=    uisce_service.convert_date    ${date_value}
+    ${return_value}=    epsilon_service.convert_date    ${date_value}
     [Return]    ${return_value}
 
 Отримати інформацію про tenderAttempts
@@ -442,7 +442,7 @@ Login
 
 Отримати інформацію про items[0].deliveryDate.endDate
     ${date_value}=    Отримати текст із поля і показати на сторінці    items[0].deliveryDate.endDate
-    ${return_value}=    uisce_service.convert_date    ${date_value}
+    ${return_value}=    epsilon_service.convert_date    ${date_value}
     [Return]    ${return_value}
 
 Отримати інформацію про questions[${index}].title
@@ -490,7 +490,7 @@ Login
     ...    ${ARGUMENTS[2]} == ${test_bid_data}
     ...    ${ARGUMENTS[3]} == ${filepath}
     ${amount}=    get_str    ${ARGUMENTS[2].data.value.amount}
-    uisce.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
+    epsilon.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
     Wait Until Page Contains Element    id = view-btn
     Click Element    id= view-btn
     sleep    3s
@@ -545,7 +545,7 @@ Login
     ...    ${ARGUMENTS[2]} == ${test_bid_data}
     ...    ${ARGUMENTS[3]} == ${filepath}
     ${amount}=    get_str    ${ARGUMENTS[2].data.value.amount}
-    uisce.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
+    epsilon.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
     Wait Until Page Contains Element    id = update-btn
     Click Element    id= update-btn
     sleep    3s
@@ -572,7 +572,7 @@ Login
 
 Завантажити документ в тендер з типом
     [Arguments]    ${username}    ${tender_uaid}    ${filepath}    ${doc_type}
-    uisce.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
+    epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
     Wait Until Page Contains Element    id = update-btn
     Click Element    id=update-btn
     Select From List By Value    id = files-type    ${doc_type}
@@ -585,7 +585,7 @@ Login
     [Documentation]    ${ARGUMENTS[0]} == username
     ...    ${ARGUMENTS[1]} == \ ${filepath}
     ...    ${ARGUMENTS[2]} == ${tender_uaid}
-    uisce.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[2]}
+    epsilon.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[2]}
     Wait Until Page Contains Element    id = update-btn
     Click Element    id=update-btn
     Select From List By Value    id = files-type    6
@@ -599,7 +599,7 @@ Login
     [Documentation]    ${ARGUMENTS[0]} == username
     ...    ${ARGUMENTS[1]} == tenderId
     ...    ${ARGUMENTS[2]} == ${vdr_url}
-    uisce.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[2]}
+    epsilon.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[2]}
     Wait Until Page Contains Element    id = update-btn
     Click Element    id=update-btn
     Select From List By Value    id = files-type    10
@@ -613,7 +613,7 @@ Login
     [Documentation]    ${ARGUMENTS[0]} == username
     ...    ${ARGUMENTS[1]} == tenderId
     ...    ${ARGUMENTS[2]} == ${vdr_url}
-    uisce.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[2]}
+    epsilon.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[2]}
     Wait Until Page Contains Element    id = update-btn
     Click Element    id=update-btn
     Select From List By Value    id = files-type    2
@@ -624,7 +624,7 @@ Login
 
 Отримати інформацію із документа по індексу
     [Arguments]    ${username}    ${tender_uaid}    ${document_index}    ${field}
-    uisce.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
+    epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
     ${doc_value}=    Get Text    id = doc_id
     [Return]    ${doc_value}
 
@@ -649,7 +649,7 @@ Login
 
 Отримати інформацію із запитання
     [Arguments]    ${username}    ${tender_uaid}    ${question_id}    ${field_name}
-    uisce.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
+    epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
     Перейти до сторінки запитань
     ${return_value}=    Run Keyword If    '${field_name}' == 'title'    Get Text    xpath=(//span[contains(@class, 'qa_title') and contains(@class, '${item_id}')])
     ...    ELSE IF    '${field_name}' == 'answer'    Get Text    xpath=(//span[contains(@class, 'qa_answer') and contains(@class, '${item_id}')])
@@ -658,18 +658,18 @@ Login
 
 Задати запитання на тендер
     [Arguments]    ${username}    ${tender_uaid}    ${question}
-    uisce.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
+    epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
     Задати питання    ${username}    ${tender_uaid}    ${question}
 
 Отримати кількість документів в тендері
     [Arguments]    ${username}    ${tender_uaid}
-    uisce.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
+    epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
     ${tender_doc_number}=    Get Matching Xpath Count    xpath=(//*[@id=' doc_id']/)
     [Return]    ${tender_doc_number}
 
 Отримати документ
     [Arguments]    ${username}    ${tender_uaid}    ${doc_id}
-    uisce.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
+    epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
     Click Element    id = update-btn
     sleep    3
     ${file_name}=    Get Text    id = doc-id
@@ -685,14 +685,14 @@ Login
 
 Скасування рішення кваліфікаційної комісії
     [Arguments]    ${username}    ${tender_uaid}    ${award_num}
-    uisce.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
+    epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
     Wait Until Page Contains Element    xpath=(//*[@id='pnAwardList']/div[last()]//*[contains(@class, 'Cancel_button')])
     Sleep    1
     Click Element    xpath=(//*[@id='pnAwardList']/div[last()]//*[contains(@class, 'Cancel_button')])
 
 Завантажити документ рішення кваліфікаційної комісії
     [Arguments]    ${username}    ${filepath}    ${tender_uaid}    ${award_num}
-    uisce.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
+    epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
     Wait Until Page Contains Element    xpath=(//*[@id='tPosition_status' and not(contains(@style,'display: none'))])
     Click Element    xpath=(//*[@id='pnAwardList']/div[last()]//div[contains(@class, 'award_docs')]//span[contains(@class, 'add_document')])
     Choose File    xpath=(//*[@id='upload_form']/input[2])    ${filepath}
@@ -702,7 +702,7 @@ Login
 
 Завантажити протокол аукціону
     [Arguments]    ${username}    ${tender_uaid}    ${filepath}    ${award_index}
-    uisce.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
+    epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
     Wait Until Page Contains Element    xpath=(//*[@id='btnShowBid' and not(contains(@style,'display: none'))])
     Click Element    id=btnShowBid
     Sleep    1
@@ -715,7 +715,7 @@ Login
 
 Завантажити угоду до тендера
     [Arguments]    ${username}    ${tender_uaid}    ${contract_num}    ${filepath}
-    uisce.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
+    epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
     Wait Until Page Contains Element    xpath=(//*[@id='tPosition_status' and not(contains(@style,'display: none'))])
     Click Element    xpath=(//*[@id='pnAwardList']/div[last()]//div[contains(@class, 'contract_docs')]//span[contains(@class, 'add_document')])
     Select From List By Value    id=slFile_documentType    contractSigned
@@ -728,6 +728,6 @@ Login
     [Arguments]    ${username}    ${tender_uaid}    ${contract_num}
     ${file_path}    ${file_title}    ${file_content}=    create_fake_doc
     Sleep    5
-    uisce.Завантажити угоду до тендера    ${username}    ${tender_uaid}    1    ${filepath}
+    epsilon.Завантажити угоду до тендера    ${username}    ${tender_uaid}    1    ${filepath}
     Wait Until Page Contains Element    xpath=(//*[@id='tPosition_status' and not(contains(@style,'display: none'))])
     Click Element    xpath=(//*[@id='pnAwardList']/div[last()]//span[contains(@class, 'contract_register')])
