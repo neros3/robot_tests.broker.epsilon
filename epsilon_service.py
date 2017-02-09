@@ -44,8 +44,8 @@ def convert_ISO_DMY(isodate):
 def convert_date(isodate):
     return datetime.strptime(isodate, '%d.%m.%Y').date().isoformat()
 
-def convert_date_to_iso(v_date, v_time):
-    full_value = v_date+" "+v_time
+def convert_date_to_iso(v_date):
+    full_value = v_date
     date_obj = datetime.strptime(full_value, "%d.%m.%Y %H:%M")
     time_zone = pytz.timezone('Europe/Kiev')
     localized_date = time_zone.localize(date_obj)

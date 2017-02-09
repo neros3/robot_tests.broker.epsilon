@@ -11,7 +11,7 @@ ${locator.description}    id = auction-description
 ${locator.minimalStep.amount}    id = auction-minimalStep_amount
 ${locator.value.amount}    id = auction_value_amount
 ${locator.value.valueAddedTaxIncluded}    id=auction-valueAddedTaxIncluded
-${locator.value.currency}    id=auction-minimalStep_currency
+${locator.value.currency}    id=value-currency
 ${locator.auctionPeriod.startDate}    id = auction-auctionPeriod_startDate
 ${locator.enquiryPeriod.startDate}    id = auction-enquiryPeriod_startDate
 ${locator.enquiryPeriod.endDate}    id = auction-enquiryPeriod_endDate
@@ -22,41 +22,41 @@ ${locator.procuringEntity.name}    id = auction-procuringEntity_name
 ${locator.dgf}    id = auction-dgfID
 ${locator.dgfDecisionID}    id=auction-dgfDecisionID
 ${locator.dgfDecisionDate}    id=auction-dgfDecisionDate
-${locator.eligibilityCriteria}    id=критерії оцінки
+${locator.eligibilityCriteria}    id=auction-eligibilityCriteria
 ${locator.tenderAttempts}    id=auction-tenderAttempts
 ${locator.procurementMethodType}    id=auction-procurementMethodType
-${locator.items[0].quantity}    id=item-quantity-1
-${locator.items[0].description}    id = item-description-1
-${locator.items[0].unit.code}    id = item-unit_code1
-${locator.items[0].unit.name}    id = item-unit_name-1
-${locator.items[0].deliveryAddress.postalCode}    id=item-postalCode1
-${locator.items[0].deliveryAddress.region}    id=item-region1
-${locator.items[0].deliveryAddress.locality}    id=item-locality1
-${locator.items[0].deliveryAddress.streetAddress}    id=item-streetAddress1
-${locator.items[0].classification.scheme}    id=tw_item_0_classification_scheme
-${locator.items[0].classification.id}    id = item-classification_id1
-${locator.items[0].classification.description}    id = item-classification_description1
+${locator.items[0].quantity}    id=item-quantity-0
+${locator.items[0].description}    id = item-description-0
+${locator.items[0].unit.code}    id = item-unit_code0
+${locator.items[0].unit.name}    id = item-unit_name0
+${locator.items[0].deliveryAddress.postalCode}    id=item-postalCode0
+${locator.items[0].deliveryAddress.region}    id=item-region0
+${locator.items[0].deliveryAddress.locality}    id=item-locality0
+${locator.items[0].deliveryAddress.streetAddress}    id=item-streetAddress0
+${locator.items[0].classification.scheme}    id=item-classification-scheme0
+${locator.items[0].classification.id}    id = item-classification_id0
+${locator.items[0].classification.description}    id = item-classification_description0
 ${locator.items[0].additionalClassifications[0].scheme}    id=tw_item_0_additionalClassifications_description
 ${locator.items[0].additionalClassifications[0].id}    id=tew_item_0_additionalClassifications_id
 ${locator.items[0].additionalClassifications[0].description}    id=tw_item_0_additionalClassifications_description
-${locator.items[1].description}    id = item-description-2
-${locator.items[1].classification.id}    id = item-classification_id2
-${locator.items[1].classification.description}    id = item-classification_description2
-${locator.items[1].classification.scheme}    id=tw_item_1_classification_scheme
-${locator.items[1].unit.code}    id = item-unit_code2
-${locator.items[1].unit.name}    id=item-unit_name-2
-${locator.items[1].quantity}    id=tew_item_1_quantity
-${locator.items[2].description}    id = item-description-3
-${locator.items[2].classification.id}    id = item-classification_id3
-${locator.items[2].classification.description}    id = item-classification_description3
-${locator.items[2].classification.scheme}    id=tw_item_2_classification_scheme
-${locator.items[2].unit.code}    id = item-unit_code3
-${locator.items[2].unit.name}    id = item-unit_name-3
-${locator.items[2].quantity}    id=tew_item_2_quantity
-${locator.questions[0].title}    id = question-title1
-${locator.questions[0].description}    id=question-description1
-${locator.questions[0].date}    id = question-date1
-${locator.questions[0].answer}    id = question-answer1
+${locator.items[1].description}    id = item-description-1
+${locator.items[1].classification.id}    id = item-classification_id1
+${locator.items[1].classification.description}    id = item-classification_description1
+${locator.items[1].classification.scheme}    id=item-classification-scheme1
+${locator.items[1].unit.code}    id = item-unit_code1
+${locator.items[1].unit.name}    id=item-unit_name1
+${locator.items[1].quantity}    id=item-quantity-1
+${locator.items[2].description}    id = item-description-2
+${locator.items[2].classification.id}    id = item-classification_id2
+${locator.items[2].classification.description}    id = item-classification_description2
+${locator.items[2].classification.scheme}    id=item-classification-scheme2
+${locator.items[2].unit.code}    id = item-unit_code2
+${locator.items[2].unit.name}    id = item-unit_name2
+${locator.items[2].quantity}    id=item-quantity-2
+${locator.questions[0].title}    id = question-title0
+${locator.questions[0].description}    id=question-description0
+${locator.questions[0].date}    id = question-date0
+${locator.questions[0].answer}    id = question-answer0
 ${locator.cancellations[0].status}    id = status
 ${locator.cancellations[0].reason}    id = messages-notes
 ${locator.contracts.status}    css=.contract_status
@@ -195,17 +195,17 @@ Login
     Go to    ${USERS.users['${ARGUMENTS[0]}'].default_page}
     Wait Until Page Contains Element    name = Auctions[auctionID]
     Input Text    name = Auctions[auctionID]    ${ARGUMENTS[1]}
+    Sleep    4
     Click Element    name = Auctions[title]
     Sleep    2
     Wait Until Page Contains Element    id=auction-view-btn
     Click Element    id=auction-view-btn
+    Sleep    10
 
 Перейти до сторінки запитань
     [Documentation]    ${ARGUMENTS[0]} = username
     ...    ${ARGUMENTS[1]} = tenderUaId
-    epsilon.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
-    Click Element    id = auction-view-btn
-    Click Element    id = tab-2
+    Click Element    id = tab-selector-2
     Wait Until Page Contains Element    id= create-question-btn
 
 Перейти до сторінки відмін
@@ -227,8 +227,8 @@ Login
     Wait Until Page Contains Element    id= create-question-btn
     Click Element    id=create-question-btn
     Sleep    3
-    Input text    id=questions-title    ${title}
-    Input text    id=questions-description    ${description}
+    Input text    id=question-title    ${title}
+    Input text    id=question-description    ${description}
     Click Element    id= create-question-btn
 
 Отримати інформацію про cancellations[0].status
@@ -269,6 +269,7 @@ Login
 
 Отримати текст із поля і показати на сторінці
     [Arguments]    ${fieldname}
+    Sleep    3
     ${return_value}=    Get Text    ${locator.${fieldname}}
     [Return]    ${return_value}
 
@@ -303,9 +304,9 @@ Login
 
 Отримати інформацію про status
     Reload Page
-    Wait Until Page Contains Element    id = status
+    Wait Until Page Contains Element    id = auction-status
     Sleep    2
-    ${return_value}=    Get Text    id = status
+    ${return_value}=    Get Text    id = auction-status
     [Return]    ${return_value}
 
 Отримати інформацію про description
@@ -366,11 +367,11 @@ Login
     [Return]    ${return_value}
 
 Отримати інформацію про value.currency
-    ${return_value}=    Get Selected List Value    slPosition_value_currency
+    ${return_value}=    Get Text    id = value-currency
     [Return]    ${return_value}
 
 Отримати інформацію про value.valueAddedTaxIncluded
-    ${return_value}=    is_checked    cbPosition_value_valueAddedTaxIncluded
+    ${return_value}=    is_checked    auction-valueAddedTaxIncluded
     [Return]    ${return_value}
 
 Отримати інформацію про auctionID
@@ -392,32 +393,32 @@ Login
     [Return]    ${return_value}
 
 Отримати інформацію про auctionPeriod.startDate
-    ${date_value}=    Get Text    css = div.table > tr : nth-child(5) > td
-    ${return_value}=    convert_date_to_iso    ${date_value}    ${time_value}
+    ${date_value}=    Get Text    auction-auctionPeriod_startDate
+    ${return_value}=    convert_date_to_iso    ${date_value}
     [Return]    ${return_value}
 
 Отримати інформацію про auctionPeriod.endDate
-    ${date_value}=    Get Text    css = div.table > tr : nth-child(5) > td
-    ${return_value}=    convert_date_to_iso    ${date_value}    ${time_value}
+    ${date_value}=    Get Text    auction-auctionPeriod_endDate
+    ${return_value}=    convert_date_to_iso    ${date_value}
 
 Отримати інформацію про tenderPeriod.startDate
-    ${date_value}=    Get Text    css = div.table > tr : nth-child(5) > td
-    ${return_value}=    convert_date_to_iso    ${date_value}    ${time_value}
+    ${date_value}=    Get Text    auction-tenderPeriod_startDate
+    ${return_value}=    convert_date_to_iso    ${date_value}
     [Return]    ${return_value}
 
 Отримати інформацію про tenderPeriod.endDate
-    ${date_value}=    Get Text    css = div.table > tr : nth-child(5) > td
-    ${return_value}=    convert_date_to_iso    ${date_value}    ${time_value}
+    ${date_value}=    Get Text    auction-tenderPeriod_endDate
+    ${return_value}=    convert_date_to_iso    ${date_value}
     [Return]    ${return_value}
 
 Отримати інформацію про enquiryPeriod.startDate
-    ${date_value}=    Get Text    css = div.table > tr : nth-child(5) > td
-    ${return_value}=    convert_date_to_iso    ${date_value}    ${time_value}
+    ${date_value}=    Get Text    auction-enquiryPeriod_startDate
+    ${return_value}=    convert_date_to_iso    ${date_value}
     [Return]    ${return_value}
 
 Отримати інформацію про enquiryPeriod.endDate
-    ${date_value}=    Get Text    css = div.table > tr : nth-child(5) > td
-    ${return_value}=    convert_date_to_iso    ${date_value}    ${time_value}
+    ${date_value}=    Get Text    auction-enquiryPeriod_endDate
+    ${return_value}=    convert_date_to_iso    ${date_value}
     [Return]    ${return_value}
 
 Отримати інформацію про items[0].deliveryAddress.countryName
@@ -447,26 +448,26 @@ Login
 
 Отримати інформацію про questions[${index}].title
     ${index}=    inc    ${index}
-    Wait Until Page Contains Element    id =
-    ${return_value}=    Get text    id =
+    Wait Until Page Contains Element    xpath=(//span[contains(@class, 'question-title')])[${index}]
+    ${return_value}=    Get text    xpath=(//span[contains(@class, 'question-title')])[${index}]
     [Return]    ${return_value}
 
 Отримати інформацію про questions[${index}].description
     ${index}=    inc    ${index}
-    Wait Until Page Contains Element    xpath=(//span[contains(@class, 'rec_qa_description')])[${index}]
-    ${return_value}=    Get text    xpath=(//span[contains(@class, 'rec_qa_description')])[${index}]
+    Wait Until Page Contains Element    xpath=(//span[contains(@class, 'question-description')])[${index}]
+    ${return_value}=    Get text    xpath=(//span[contains(@class, 'question-description')])[${index}]
     [Return]    ${return_value}
 
 Отримати інформацію про questions[${index}].answer
     ${index}=    inc    ${index}
-    Wait Until Page Contains Element    xpath=(//span[contains(@class, 'rec_qa_answer')])[${index}]
-    ${return_value}=    Get text    xpath=(//span[contains(@class, 'rec_qa_answer')])[${index}]
+    Wait Until Page Contains Element    xpath=(//span[contains(@class, 'question-answer')])[${index}]
+    ${return_value}=    Get text    xpath=(//span[contains(@class, 'question-answer')])[${index}]
     [Return]    ${return_value}
 
 Отримати інформацію про questions[${index}].date
     ${index}=    inc    ${index}
-    Wait Until Page Contains Element    xpath=(//span[contains(@class, 'rec_qa_date')])[${index}]
-    ${return_value}=    Get text    xpath=(//span[contains(@class, 'rec_qa_date')])[${index}]
+    Wait Until Page Contains Element    xpath=(//span[contains(@class, 'anwser-date')])[${index}]
+    ${return_value}=    Get text    xpath=(//span[contains(@class, 'anwser-date')])[${index}]
     ${return_value}=    convert_date_time_to_iso    ${return_value}
     [Return]    ${return_value}
 
@@ -480,7 +481,7 @@ Login
     Перейти до сторінки запитань
     Click Element    id = create-answer-btn
     Sleep    3
-    Input Text    id=questions-answer    ${answer}
+    Input Text    id=question-answer    ${answer}
     Click Element    id=create-question-btn
 
 Подати цінову пропозицію
@@ -557,9 +558,9 @@ Login
 Отримати посилання на аукціон для глядача
     [Arguments]    @{ARGUMENTS}
     Switch Browser    ${ARGUMENTS[0]}
-    Wait Until Page Contains Element    xpath=(//*[@id='aPosition_auctionUrl' and not(contains(@style,'display: none'))])
+    Wait Until Page Contains Element    id = auction-url
     Sleep    5
-    ${result} =    Get Text    id=aPosition_auctionUrl
+    ${result} =    Get Text    id = auction-url
     [Return]    ${result}
 
 Отримати посилання на аукціон для учасника
@@ -625,12 +626,12 @@ Login
 Отримати інформацію із документа по індексу
     [Arguments]    ${username}    ${tender_uaid}    ${document_index}    ${field}
     epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
-    ${doc_value}=    Get Text    id = doc_id
+    ${doc_value}=    Get Text    xpath=(//*[@id='auction-documents']/table[${document_index + 1}]//span[contains(@class, 'documentType')])
     [Return]    ${doc_value}
 
 Отримати інформацію із документа
     [Arguments]    ${username}    ${tender_uaid}    ${doc_id}    ${field_name}
-    ${doc_value}=    Get Text    id = doc_id
+    ${doc_value}=    Get Text    id = document-id
     [Return]    ${doc_value}
 
 Відповісти на запитання
@@ -643,17 +644,17 @@ Login
     Перейти до сторінки запитань
     Click Element    id = create-answer-btn
     Sleep    3
-    Input Text    id=questions-answer    ${answer}
+    Input Text    id=question-answer    ${answer}
     Click Element    id=create-question-btn
     sleep    1
 
 Отримати інформацію із запитання
     [Arguments]    ${username}    ${tender_uaid}    ${question_id}    ${field_name}
-    epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
     Перейти до сторінки запитань
-    ${return_value}=    Run Keyword If    '${field_name}' == 'title'    Get Text    xpath=(//span[contains(@class, 'qa_title') and contains(@class, '${item_id}')])
-    ...    ELSE IF    '${field_name}' == 'answer'    Get Text    xpath=(//span[contains(@class, 'qa_answer') and contains(@class, '${item_id}')])
-    ...    ELSE    Get Text    xpath=(//span[contains(@class, 'qa_description') and contains(@class, '${item_id}')])
+    Sleep    2
+    ${return_value}=    Run Keyword If    '${field_name}' == 'title'    Get Text    xpath=(//span[contains(@class, 'question-title') and contains(@class, '${item_id}')])
+    ...    ELSE IF    '${field_name}' == 'answer'    Get Text    xpath=(//span[contains(@class, 'question-answer') and contains(@class, '${item_id}')])
+    ...    ELSE    Get Text    xpath=(//span[contains(@class, 'question-description') and contains(@class, '${item_id}')])
     [Return]    ${return_value}
 
 Задати запитання на тендер
@@ -664,23 +665,22 @@ Login
 Отримати кількість документів в тендері
     [Arguments]    ${username}    ${tender_uaid}
     epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
-    ${tender_doc_number}=    Get Matching Xpath Count    xpath=(//*[@id=' doc_id']/)
+    ${tender_doc_number}=    Get Matching Xpath Count    (//*[@id='auction-documents']/table)
     [Return]    ${tender_doc_number}
 
 Отримати документ
     [Arguments]    ${username}    ${tender_uaid}    ${doc_id}
     epsilon.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
-    Click Element    id = update-btn
     sleep    3
-    ${file_name}=    Get Text    id = doc-id
-    ${url}=    Get Element Attribute    id = doc-id@name
+    ${file_name}=    Get Text    id = document-id
+    ${url}=    Get Element Attribute    id = document-id@href
     download_file    ${url}    ${file_name.split('/')[-1]}    ${OUTPUT_DIR}
     [Return]    ${file_name.split('/')[-1]}
 
 Отримати дані із документу пропозиції
     [Arguments]    ${username}    ${tender_uaid}    ${bid_index}    ${document_index}    ${field}
     ${document_index}=    inc    ${document_index}
-    ${result}=    Get Text    xpath=(//*[@id='pnAwardList']/div[last()]/div/div[1]/div/div/div[2]/table[${document_index}]//span[contains(@class, 'documentType')])
+    ${result}=    Get Text    id = document-id
     [Return]    ${result}
 
 Скасування рішення кваліфікаційної комісії
